@@ -1,12 +1,12 @@
 import React from 'react';
-
+import { useNavigate } from 'react-router-dom';
 import resumePdf from '../assets/resume.pdf'
 const CandidateDetails = () => {
     const firstName = 'Sudipto';
     const highestDegree = 'B.Tech';
     const passoutYear = 2022;
     const technologies = ['JavaScript', 'HTML', 'CSS', 'TypeScript', 'React', 'Next.js', 'MongoDB', 'Node.js', 'Express.js'];
-    
+    const navigate = useNavigate()
     const downloadResume = () => {
         const cvFileName = 'resume.pdf';
         const cvFilePath = resumePdf;
@@ -71,7 +71,7 @@ const CandidateDetails = () => {
             </div>
             <br />
             <div>
-                <button >Calculate BMI</button>
+                <button onClick={()=>{navigate('/calculateBmi')}}>Calculate BMI</button>
             </div>
            
         </div>
