@@ -2,7 +2,7 @@ import React from 'react';
 import { useNavigate } from 'react-router-dom';
 import resumePdf from '../assets/resume.pdf'
 const CandidateDetails = () => {
-    const firstName = 'Sudipto';
+    const firstName = 'Sudipto Das';
     const highestDegree = 'B.Tech';
     const passoutYear = 2022;
     const technologies = ['JavaScript', 'HTML', 'CSS', 'TypeScript', 'React', 'Next.js', 'MongoDB', 'Node.js', 'Express.js'];
