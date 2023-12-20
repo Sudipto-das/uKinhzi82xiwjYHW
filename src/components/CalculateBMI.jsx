@@ -1,57 +1,88 @@
-import { useState } from "react"
-const CalculateBmi = () =>{
+import React, { useState } from 'react';
+import { z } from 'zod';
 
+const BmiInputSchema = z.object({
+  height: z.number().positive().min(0.1).max(3.0),
+  weight: z.number().positive().min(1).max(300),
+});
 
-    const [weight, setWeight] = useState('')
-    const [height, setHeight] = useState('')
-    const [bmi,setBmi] = useState(null)
+function BmiCalculator() {
+  const [height, setHeight] = useState('');
+  const [weight, setWeight] = useState('');
+  const [result, setResult] = useState(null);
+  const [heightError, setHeightError] = useState(null);
+  const [weightError, setWeightError] = useState(null);
 
-    const BmiCalculate = () =>{
-        const weightValue = parseFloat(weight)
-        const heightValue = parseFloat(height)
+  const handleHeightChange = (event) => {
+    const value = event.target.value;
+    setHeight(value);
+    setHeightError(null); // Clear previous error when input changes
+  };
 
-        if (isNaN(weightValue) || isNaN(heightValue)) {
-            alert('Please enter valid numeric values for weight and height.');
-            return;
-          }
+  const handleWeightChange = (event) => {
+    const value = event.target.value;
+    setWeight(value);
+    setWeightError(null); // Clear previous error when input changes
+  };
+
+  const calculateBMI = () => {
+    try {
+      const inputData = BmiInputSchema.parse({
+        height: Number(height),
+        weight: Number(weight),
+      });
+      const bmi = calculateBMIValue(inputData.height, inputData.weight);
+      setResult(bmi);
       
-          if (weightValue < 1.0 || weightValue > 300.0 || heightValue < 0.1 || heightValue > 3.0) {
-            alert('Please enter valid values for weight (1.0 - 300.0) and height (0.1 - 3.0).');
-            return;
+    } catch (validationError) {
+      setResult(null)
+      if (validationError instanceof z.ZodError) {
+        validationError.errors.forEach((error) => {
+          if (error.path[0] === 'height') {
+            setHeightError(error.message);
+          } else if (error.path[0] === 'weight') {
+            setWeightError(error.message);
           }
-      
-          const bmiValue = weightValue / Math.pow(heightValue, 2);
-          setBmi(bmiValue.toFixed(1));
-        };
-        return (
-            <div>
-              <h2>BMI Calculator</h2>
-              <div>
-                <label>Weight (kg):</label>
-                <input
-                  type="text"
-                  value={weight}
-                  onChange={(e) => setWeight(e.target.value)}
-                  placeholder="Enter weight (1.0 - 300.0)"
-                />
-              </div>
-              <div>
-                <label>Height (m):</label>
-                <input
-                  type="text"
-                  value={height}
-                  onChange={(e) => setHeight(e.target.value)}
-                  placeholder="Enter height (0.1 - 3.0)"
-                />
-              </div>
-              <button onClick={BmiCalculate}>Calculate BMI</button>
-        
-              {bmi !== null && (
-                <div style={{ marginTop: '20px' }}>
-                  <h3>Your BMI is: {bmi}</h3>
-                </div>
-              )}
-            </div>
-          );
+        });
+      } else {
+        setResult(null);
+      }
+    }
+  };
+
+  const calculateBMIValue = (height, weight) => {
+    return (weight / Math.pow(height, 2)).toFixed(2);
+  };
+
+  return (
+    <div>
+      <h2>BMI Calculator</h2>
+      <div>
+        <label>Height (m): </label>
+        <input
+          type="number"
+          value={height}
+          onChange={(e) => handleHeightChange(e)}
+          placeholder="Enter height (0.1 - 3.0)"
+        />
+        {heightError && <p style={{ color: 'red' }}>{heightError}</p>}
+      </div>
+      <br />
+      <div>
+        <label>Weight (kg): </label>
+        <input
+          type="number"
+          value={weight}
+          onChange={(e) => handleWeightChange(e)}
+          placeholder="Enter weight (1.0 - 300.0)"
+        />
+        {weightError && <p style={{ color: 'red' }}>{weightError}</p>}
+      </div>
+      <br />
+      <button onClick={calculateBMI}>Calculate BMI</button>
+      {result !== null && <p>Your BMI is: {result}</p>}
+    </div>
+  );
 }
-export default CalculateBmi;
+
+export default BmiCalculator;
