@@ -1,6 +1,6 @@
 import React, { useState } from 'react';
 import { z } from 'zod';
-
+import { Link } from 'react-router-dom';
 const BmiInputSchema = z.object({
   height: z.number().positive().min(0.1).max(3.0),
   weight: z.number().positive().min(1).max(300),
@@ -16,13 +16,13 @@ function BmiCalculator() {
   const handleHeightChange = (event) => {
     const value = event.target.value;
     setHeight(value);
-    setHeightError(null); // Clear previous error when input changes
+    setHeightError(null); 
   };
 
   const handleWeightChange = (event) => {
     const value = event.target.value;
     setWeight(value);
-    setWeightError(null); // Clear previous error when input changes
+    setWeightError(null); 
   };
 
   const calculateBMI = () => {
@@ -35,7 +35,7 @@ function BmiCalculator() {
       setResult(bmi);
       
     } catch (validationError) {
-      setResult(null)
+      setResult(null) // clear the result 
       if (validationError instanceof z.ZodError) {
         validationError.errors.forEach((error) => {
           if (error.path[0] === 'height') {
@@ -81,7 +81,12 @@ function BmiCalculator() {
       <br />
       <button onClick={calculateBMI}>Calculate BMI</button>
       {result !== null && <p>Your BMI is: {result}</p>}
+
+      <br />
+      <br />
+      <Link to={'/'}>Back to Previous Page</Link>
     </div>
+    
   );
 }
 
