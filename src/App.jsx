@@ -2,7 +2,7 @@ import { useState } from 'react'
 import './App.css'
 import CandidateDetails from './components/Landingpage'
 import CalculateBmi from './components/CalculateBMI'
-import { HashRouter as Router, Routes, Route } from "react-router-dom";
+import { HashRouter , Routes, Route } from "react-router-dom";
 function App() {
   
 
