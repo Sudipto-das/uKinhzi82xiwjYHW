@@ -2,8 +2,16 @@ import React, { useState } from 'react';
 import { z } from 'zod';
 import { Link } from 'react-router-dom';
 const BmiInputSchema = z.object({
-  height: z.number().positive().min(0.1).max(3.0),
-  weight: z.number().positive().min(1).max(300),
+  height: z
+    .number()
+    .positive({ message: 'Height must be a positive number' })
+    .min(0.1, { message: 'Height must be greater than or equal to 0.1' })
+    .max(3.0, { message: 'Height must be less than or equal to 3.0' }),
+  weight: z
+    .number()
+    .positive({ message: 'Weight must be a positive number' })
+    .min(1, { message: 'Weight must be greater than or equal to 1' })
+    .max(300, { message: 'Weight must be less than or equal to 300' }),
 });
 
 function BmiCalculator() {
@@ -58,8 +66,9 @@ function BmiCalculator() {
     <div>
       <h2>BMI Calculator</h2>
       <div>
-        <label>Height (m): </label>
+        <label htmlFor='height'>Height (m): </label>
         <input
+          id='height'
           type="number"
           value={height}
           onChange={(e) => handleHeightChange(e)}
@@ -69,8 +78,9 @@ function BmiCalculator() {
       </div>
       <br />
       <div>
-        <label>Weight (kg): </label>
+        <label htmlFor='weight'>Weight (kg): </label>
         <input
+          id='weight'
           type="number"
           value={weight}
           onChange={(e) => handleWeightChange(e)}
